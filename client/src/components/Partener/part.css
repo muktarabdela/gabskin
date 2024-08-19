@@ -1,0 +1,20 @@
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-infinite-scroll {
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: scroll 20s linear infinite;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}

@@ -1,0 +1,73 @@
+
+
+.gabiskin__hot-title {
+    font-size: 30px;
+    font-weight: 1000;
+    text-align: center;
+    margin: 0 0 50px;
+    opacity: 1;
+}
+
+.gabiskin__hot-main ul {
+    display: flex;
+    text-align: center;
+    list-style: none;
+    overflow-y: hidden !important;
+    overflow-x: scroll !important;
+    padding: 20px 0;
+    transition: transform 450ms;
+}
+
+.gabiskin__hot-main ul::-webkit-scrollbar {
+    display: none;
+}
+
+.gabiskin__hot-main ul div a {
+    color: #f4f4f5;
+}
+
+.gabiskin__hot-main ul div a .hot-title {
+    font-size: 20px;
+}
+
+.gabiskin__hot-main ul div a img {
+    transition: 0.3s;
+}
+
+.gabiskin__hot-main ul div a img:hover {
+    transform: scale(1.09);
+}
+
+.gabiskin__hot-main ul div a .hot-price {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.gabiskin__hot-main ul div a .hot-price small {
+    font-style: italic;
+    padding-left: 5px;
+    font-weight: 800;
+}
+
+.gabiskin__hot-main ul div a .hot-price small del {
+    color: #6c757d;
+}
+
+.hot__price-button {
+    border: none;
+    border-radius: 2px;
+    background-color: #6b46c1;
+    color: white;
+    height: 30px;
+    width: 100px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.5s;
+    opacity: 0.7;
+    margin: 5px 45px 0;
+}
+
+.hot__price-button:hover {
+    opacity: 1;
+}
+

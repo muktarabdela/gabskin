@@ -1,0 +1,236 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+.gabiskin__price {
+    margin: 80px 0 150px !important;
+}
+
+.gabiskin__price-main {
+    margin-bottom: 150px;
+}
+
+.gabiskin__price-title {
+    font-size: 30px;
+    font-weight: 1000;
+    text-align: center;
+    margin-bottom: 60px !important;
+    opacity: 1 !important;
+}
+
+.pricing-table-wrapper {
+    max-width: 71rem;
+    margin: 0 auto;
+}
+
+.pricing-table__title {
+    opacity: 1;
+    margin: 10px 0 !important;
+    color: rgba(252, 176, 69, 1);
+    font-size: 30px;
+}
+
+.pricing-table__description {
+    margin-bottom: 15px !important;
+}
+
+.pricing-table__tagline {
+    font-size: 20px;
+}
+
+.pricing-table__products {
+    width: 100px;
+}
+
+.pricing-table__product a {
+    color: rgb(34, 193, 195) !important;
+    margin-top: 10px;
+    font: 100%/1.6 "Roboto", sans-serif;
+}
+
+.pricing-table__button {
+    margin: 25px 0 0 10px;
+    border: none;
+    border-radius: 60px;
+    background-color: #6b41c1;
+    color: #fff;
+    height: 35px;
+    width: 100px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.5s;
+    opacity: 0.7;
+    text-align: center;
+    padding-bottom: 3px;
+    transition: 0.4s;
+    font-family: "Kanit", sans-serif;
+}
+
+.pricing-table__button:hover {
+    opacity: 1;
+}
+
+.pricing-table__item {
+    border-radius: 5px;
+    padding: 20px;
+    background: rgb(0, 0, 0);
+    background: linear-gradient(0deg,
+            rgba(75, 4, 75, 0.701) 29%,
+            rgba(35, 255, 15, 0.365) 70%);
+}
+
+.pricing-table__item-one {
+    height: 600px !important;
+    margin-top: 30px;
+    transition: transform 450ms;
+}
+
+.pricing-table__item-two {
+    height: 630px !important;
+    padding: 0 10px !important;
+    transition: transform 450ms;
+    margin: 35px auto !important;
+}
+
+.pricing-table__item-three {
+    margin-top: 110px;
+    height: 550px !important;
+    padding: 15px 10px 10px !important;
+    transition: transform 450ms;
+}
+
+.margin {
+    margin: 12px 0 !important;
+}
+
+.margin-1 {
+    margin-bottom: 12px !important;
+}
+
+.mini {
+    border-radius: 50%;
+}
+
+.pricing-table {
+    margin: 0 auto;
+}
+
+.pricing-table li {
+    display: block !important;
+    width: 280px;
+    margin: 0 auto;
+}
+
+.custom {
+    border-radius: 10px;
+}
+
+@media (min-width: 640px) {
+
+    .pricing-table__item-one:hover,
+    .pricing-table__item-two:hover,
+    .pricing-table__item-three:hover {
+        transform: scale(1.07);
+    }
+
+    .pricing-table li {
+        width: 350px;
+    }
+
+    .pricing-table__item-one {
+        height: 670px !important;
+    }
+
+    .pricing-table__item-two {
+        height: 670px !important;
+    }
+
+    .pricing-table__item-three {
+        height: 590px !important;
+    }
+}
+
+@media (min-width: 720px) {
+    .pricing-table li {
+        width: 380px;
+    }
+
+    .pricing-table__item-one {
+        height: 700px !important;
+    }
+
+    .pricing-table__item-two {
+        height: 700px !important;
+    }
+
+    .pricing-table__item-three {
+        height: 610px !important;
+    }
+}
+
+@media (min-width: 840px) {
+    .pricing-table {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 750px;
+    }
+
+    .pricing-table li {
+        width: 240px;
+    }
+
+    .pricing-table__item-one {
+        height: 580px !important;
+    }
+
+    .pricing-table__item-two {
+        height: 660px !important;
+    }
+
+    .pricing-table__item-three {
+        height: 550px !important;
+    }
+}
+
+@media (min-width: 1000px) {
+    .pricing-table {
+        width: 970px;
+    }
+
+    .pricing-table li {
+        width: 310px;
+    }
+
+    .pricing-table__item-one {
+        height: 620px !important;
+    }
+
+    .pricing-table__item-two {
+        height: 630px !important;
+    }
+
+    .pricing-table__item-three {
+        height: 570px !important;
+    }
+}
+
+@media (min-width: 2000px) {
+    .pricing-table {
+        width: 1500px;
+    }
+
+    .pricing-table li {
+        width: 480px;
+    }
+
+    .pricing-table__item-one {
+        height: 760px !important;
+    }
+
+    .pricing-table__item-two {
+        height: 730px !important;
+    }
+
+    .pricing-table__item-three {
+        height: 640px !important;
+    }
+}

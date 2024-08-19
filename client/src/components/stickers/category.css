@@ -1,0 +1,35 @@
+.gabiskin__category-title {
+    font-size: 30px;
+    font-weight: 1000;
+    text-align: center;
+    margin: 30px 0 50px;
+    opacity: 1 !important;
+}
+
+.gabiskin__category-main__title {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px;
+    overflow-y: hidden !important;
+    overflow-x: scroll !important;
+    transition: transform 450ms;
+}
+
+.gabiskin__category-main__title::-webkit-scrollbar,
+.gabiskin__category-main__product::-webkit-scrollbar {
+    display: none;
+}
+
+.gabiskin__category-main__title p {
+    font-size: 25px;
+    font-weight: 400;
+    margin: 10px 20px 50px;
+    cursor: pointer;
+    transition: 0.4s;
+    opacity: 0.9 !important;
+}
+
+.gabiskin__category-main__title p:hover {
+    color: #6b46c1;
+    transform: scale(1.1);
+}

@@ -1,0 +1,23 @@
+/* Import Google Fonts in your CSS file */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+
+/* Apply fonts to elements */
+body {
+    background: linear-gradient(to right, #002049 30%, #033a70 50%);
+    color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+ul li {
+    list-style: none;
+}
