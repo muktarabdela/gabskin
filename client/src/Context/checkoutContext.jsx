@@ -45,10 +45,8 @@ const CheckoutContextProvider = ({ children }) => {
                 const decoded = jwtDecode(token);
                 const admin = decoded.role === 'admin';
                 const isAdmin = decoded.isAdmin === true;
-                console.log("Admin:", admin, "Is Admin:", isAdmin);
                 if (admin || isAdmin) {
-                    const expDate = new Date(decoded.exp * 1000);
-                    console.log("Token Expiration Date:", expDate.toUTCString());
+                    // const expDate = new Date(decoded.exp * 1000);
                     if (decoded.exp * 1000 < Date.now()) {
                         logout();
                     }

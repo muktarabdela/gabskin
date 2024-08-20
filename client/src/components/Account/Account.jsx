@@ -8,6 +8,7 @@ const Account = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
+    console.log(userId)
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const isValidToken = typeof token === 'string' && token.length > 0;
@@ -30,7 +31,7 @@ const Account = () => {
         }
         getUserData();
     }, [userId, navigate]);
-    if (!isValidToken) {
+    if (userId === "undefined" || userId === "null") {
         return <AuthForm />;
 
     }

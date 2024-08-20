@@ -9,7 +9,7 @@ const AuthForm = () => {
     };
 
     return (
-        <div>
+        <div className='mb-20'>
             <Login onToggleForm={toggleForm} />
         </div>
     );
