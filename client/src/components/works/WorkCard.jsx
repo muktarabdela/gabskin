@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../../Axios';
 import Pagination from '../stickers/Pagination';
 import { Link } from 'react-router-dom';
 import Telegram from '../../../public/images/telegram.png';
@@ -7,6 +6,7 @@ import tiktok from '../../../public/images/tiktok.png';
 import instagram from '../../../public/images/instagram.png';
 import youtube from '../../../public/images/youtube.png';
 import ReactPlayer from 'react-player';
+import { getWorksStickers } from '../../api/StickerApi';
 const WorkCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
@@ -16,7 +16,7 @@ const WorkCard = () => {
   useEffect(() => {
     const fetchStickersByCategory = async () => {
       try {
-        const response = await axios.get(`/stickers/stickers-withCategory?category=works`);
+        const response = await getWorksStickers()
         const reversedStickers = response.data.stickers.reverse();
         setStickersData(reversedStickers);
       } catch (error) {
@@ -97,7 +97,7 @@ const WorkCard = () => {
       </div>
       <div className="text-center my-8">
         <p className="text-2xl font-bold text-gray-200 mb-4">
-          Gabi Laptop skins are made of durable material that enhances your device's overall appearance and protects it from scuffs and scratches. 
+          Gabi Laptop skins are made of durable material that enhances your device's overall appearance and protects it from scuffs and scratches.
         </p>
         <ul className="list-disc list-inside text-lg text-gray-300">
           <li className="mb-2">Prevents scratches</li>

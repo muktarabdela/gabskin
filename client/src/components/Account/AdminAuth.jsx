@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import axios from '../../Axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess, loginFailure } from '../../store/authSlice';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { loginAdmin } from '../../api/adminApi';
 const AdminAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -20,9 +20,9 @@ const AdminAuth = () => {
     });
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('token');
         if (token) {
-            navigate('/admin', { replace: true }); 
+            navigate('/admin', { replace: true });
         }
     }, [navigate]);
 
@@ -34,25 +34,21 @@ const AdminAuth = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios
-            .post("/admin/login", formData)
-            .then((response) => {
-                console.log(response.data);
+        try {
+            const response = await loginAdmin(formData);
+            if (response.status === 200) {
                 const token = response.data.token;
-                console.log("console for token", token);
-                localStorage.setItem('accessToken', token);
-
+                localStorage.setItem('token', token);
                 dispatch(loginSuccess(response.data));
-                console.log("navigate to admin");
                 navigate("/admin");
-            })
-            .catch((error) => {
-                console.log(error)
-                console.error(error.response.data.error);
-                setError(error.response.data.error);
-            })
+            } else {
+                setError(response.data.message);
+            }
+        } catch (error) {
+            console.log(error)
+        }
     };
     return (
         <section className=" mt-[5em]">

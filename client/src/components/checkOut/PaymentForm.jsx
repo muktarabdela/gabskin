@@ -1,7 +1,6 @@
 import { Button, Tooltip } from "@material-ui/core";
 import { useContext, useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
-import axios from "../../Axios";
 import telebir from "../../../public/images/telebirr.png"
 import cbe from "../../../public/images/cbe.jpeg"
 import boa from "../../../public/images/boa.png"
@@ -10,12 +9,14 @@ import { useSelector } from 'react-redux';
 import { selectUserId, setErrorData } from '../../store/userSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import axios from "axios";
+import { userPaymentInfo } from "../../api/userApi.js";
 
 const PaymentForm = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const error = useSelector(state => state.user.Error);
+    const error = useSelector(state => state.user.error);
     const [paymentMethodError, setPaymentMethodError] = useState(null);
     const [imageError, setImageError] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -32,7 +33,6 @@ const PaymentForm = () => {
     const totalAmountWithDiscount = totalAmountWithoutDiscount / 5;
 
     const unPaid = totalAmountWithoutDiscount - totalAmountWithDiscount
-
 
     const handlePaymentMethodChange = (e) => {
         const selectedPaymentMethod = e.target.value;
@@ -72,22 +72,19 @@ const PaymentForm = () => {
                     },
                 }
             );
-            console.log('Image uploaded:', response.data.secure_url);
-            const token = localStorage.getItem('acc2essToken');
-            const paymentInfo = await axios.post('/users/paymentInfo', {
+            const data = {
                 userId: userId,
                 receiptScreenshot: response.data.secure_url,
-                paymentMethod: paymentMethod,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
+                paymentMethod: paymentMethod
+            }
+
+            const response1 = await userPaymentInfo(data)
+            console.log(response1)
             setIsUploading(false);
-            navigate(`/account/${userId}`, { replace: true });
-            window.location.reload();
-            console.log(paymentInfo);
+            if (response1.success === true) {
+                navigate(`/account/${userId}`, { replace: true });
+                window.location.reload();
+            }
         } catch (error) {
             console.error('Error uploading image:', error);
         }

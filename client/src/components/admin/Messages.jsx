@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import axios from '../../Axios'
+import axios from '../../api/Axios'
+import { getMessages } from '../../api/userApi';
 const Messages = () => {
     const [usersData, setUsersData] = useState([]);
 
@@ -7,7 +8,8 @@ const Messages = () => {
         window.scrollTo(0, 0);
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('/get-submission');
+                const response = await getMessages()
+                console.log(response);
                 const userDataArray = response.data;
                 setUsersData(userDataArray);
             } catch (error) {

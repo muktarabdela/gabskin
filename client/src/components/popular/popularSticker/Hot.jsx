@@ -1,8 +1,8 @@
 import AddToCartPopup from "../../popup/AddToCartPopup";
 import HotCard from "./HotCard";
 import { useState, useEffect } from "react";
-import axios from "../../../Axios";
 import "./hot.css";
+import { getPopularStickersLarge } from "../../../api/StickerApi";
 
 function Hot() {
     const [hotStickers, setHotStickers] = useState([]);
@@ -12,9 +12,8 @@ function Hot() {
     useEffect(() => {
         const fetchHot = async () => {
             try {
-                const response = await axios.get("/stickers/stickers-withCategory?category=popular");
-                setHotStickers(response.data.stickers);
-                console.log(response.data);
+                const response = await getPopularStickersLarge()
+                setHotStickers(response.stickers);
                 setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching stickers:', error);

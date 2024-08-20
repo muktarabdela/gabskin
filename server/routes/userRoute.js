@@ -5,26 +5,26 @@ const User = require('../models/userModel.js');
 // Define your routes here
 const { registerUser, loginUser, paymentInfo, getUserInfo, } = require('../controllers/useController.js');
 
-const authenticateToken = require('../middleware/authenticateToken.js');
+const authMiddleware = require('../middleware/authenticateToken.js');
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 // get user info  
-router.post('/paymentInfo', paymentInfo);
+router.post('/paymentInfo', authMiddleware.verifyToken, paymentInfo);
 
 // protected route
-router.get('/protected', authenticateToken, (req, res) => {
+router.get('/protected', authMiddleware.verifyToken, (req, res) => {
     res.json({ message: 'Protected route accessed successfully' });
 });
 
 // user info 
-router.get('/get-user-info/:userId', authenticateToken, getUserInfo);
+router.get('/get-user-info/:userId', authMiddleware.verifyToken, getUserInfo);
 
 // admin route
-router.get('/admin', async (req, res) => {
+router.get('/admin', authMiddleware.verifyToken, authMiddleware.checkAdmin, async (req, res) => {
     try {
-        const users = await User.find().select('-password'); 
+        const users = await User.find().select('-password');
         res.json(users);
     } catch (error) {
         console.error(error);

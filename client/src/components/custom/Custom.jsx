@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios1 from 'axios';
-import axios from "../../Axios";
 import { addToCart } from '../../store/CartSlice';
 import miniStikcer from "../../../public/images/price3.jpg";
 import {
@@ -10,6 +9,7 @@ import {
     Popover, PopoverHandler, PopoverContent, Button, Progress,
 } from "@material-tailwind/react";
 import { useDispatch } from 'react-redux';
+import { uploadCustom } from '../../api/StickerApi';
 const Custom = () => {
     const [images, setImages] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
@@ -93,11 +93,11 @@ const Custom = () => {
                 );
 
                 console.log(`Image ${i + 1} uploaded:`, response.data.secure_url);
-                const customDataBase = await axios.put('/stickers/get-custom', {
+                const data = {
                     imageUrl: response.data.secure_url,
-                    ...customStickerData,
-                });
-
+                    ...customStickerData
+                }
+                const customDataBase = uploadCustom(data)
                 console.log(customDataBase.data.newSticker);
                 dispatch(addToCart({
                     _id: customDataBase.data.newSticker._id,

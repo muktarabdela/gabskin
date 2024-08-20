@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import axios from "../../Axios";
 import Pagination from '../stickers/Pagination';
 import HalfCard from "./HalfCard";
+import { fetchStickersByCategory } from "../../api/StickerApi";
 
 const LaptopSkin = ({ category }) => {
     const [stickersData, setStickersData] = useState([]);
@@ -10,11 +10,10 @@ const LaptopSkin = ({ category }) => {
     const stickersPerPage = 8;
 
     useEffect(() => {
-        const fetchStickersByCategory = async () => {
+        const fetchStickers = async () => {
             try {
-                const response = await axios.get(`/stickers/stickers-withCategory?category=${category}`);
-                // Reverse the order of stickers in the response data
-                const reversedStickers = response.data.stickers.reverse();
+                const response = await fetchStickersByCategory(category);
+                const reversedStickers = response.stickers.reverse();
                 setStickersData(reversedStickers);
                 setIsLoading(false);
             } catch (error) {
@@ -22,7 +21,7 @@ const LaptopSkin = ({ category }) => {
                 setIsLoading(false);
             }
         };
-        fetchStickersByCategory();
+        fetchStickers();
     }, [category]);
     const stickersContainerRef = useRef();
 

@@ -1,49 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../Axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import AuthForm from '../auth/AuthForm';
 import UserAccountDetails from './UserAccountDetails';
+import { getUserInfo } from '../../api/userApi';
 const Account = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
     const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const isValidToken = typeof token === 'string' && token.length > 0;
     useEffect(() => {
-        const token = localStorage.getItem('acc2essToken');
-        if (token) {
+        // create function for this
+        const getUserData = async () => {
+            const token = localStorage.getItem('token');
+            const isValidToken = typeof token === 'string' && token.length > 0;
+            const decodedToken = isValidToken ? jwtDecode(token) : null;
+            const userIdFromToken = decodedToken?.userId;
             try {
-                const decodedToken = jwtDecode(token);
-                const userIdFromToken = decodedToken.userId;
                 if (userIdFromToken) {
-                    axios
-                        .get(`/users/get-user-info/${userIdFromToken}`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                            },
-                        })
-                        .then(response => {
-                            setUserInfo(response.data);
-                            setLoading(false);
-                        })
-                        .catch(error => {
-                            console.error('Error fetching user data:', error);
-                            setLoading(false);
-                        });
-                } else {
-                    // userId is not available, indicating a new user
+                    const response = await getUserInfo(userIdFromToken);
+                    setUserInfo(response);
                     setLoading(false);
                 }
             } catch (error) {
-                console.error('Error decoding token:', error);
-                setLoading(false);
+                console.log(error)
             }
-        } else {
-            setLoading(false);
         }
+        getUserData();
     }, [userId, navigate]);
+    if (!isValidToken) {
+        return <AuthForm />;
+
+    }
     if (loading) {
-        return <p>Loading...</p>;
+        return <p className='mt-40'>Loading...</p>;
     }
     if (!userInfo) {
         return <AuthForm />;

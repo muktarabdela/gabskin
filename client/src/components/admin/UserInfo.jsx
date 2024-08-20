@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from "../../Axios";
+import { deleteUser } from '../../api/userApi';
 
 const UserInfo = ({ userInfo, setUserInfo }) => {
     const reversedUserInfo = userInfo.slice().reverse();
@@ -22,10 +22,8 @@ const UserInfo = ({ userInfo, setUserInfo }) => {
         console.log(userToDelete)
         try {
             setLoading(true);
-            const response = await axios.delete(`/admin/delete/${userToDelete._id}`);
+            const response = await deleteUser(userToDelete._id);
             if (response.status === 200) {
-                const updatedUserInfo = userInfo.filter(user => user._id !== userToDelete._id);
-                // setUserInfo(updatedUserInfo);
                 alert('User information deleted successfully');
                 window.location.reload();
             } else {
@@ -67,10 +65,10 @@ const UserInfo = ({ userInfo, setUserInfo }) => {
                                     <td className="py-4 px-6 border-b border-gray-200">
                                         {(user.phone || (user.deliveryInfo?.phone)) || 'N/A'}
                                     </td>
-                                    <td className="py-4 px-6 border-b border-gray-200 text-green-600">
+                                    <td className="py-4 px-6 border-b border-gray-200 text-green-600 whitespace-nowrap">
                                         {user.paymentStatus}
                                     </td>
-                                    <td className="py-4 px-6 border-b border-gray-200 text-green-600">
+                                    <td className="py-4 px-6 border-b border-gray-200 text-green-600 whitespace-nowrap">
                                         {user.deliveryStatus}
                                     </td>
                                     <td className="py-4 px-6 border-b border-gray-200 text-green-600">

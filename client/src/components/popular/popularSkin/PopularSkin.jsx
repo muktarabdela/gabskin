@@ -1,8 +1,8 @@
 import AddToCartPopup from "../../popup/AddToCartPopup"; // Import AddToCartPopup
 import PoplarSkinCard from "./PoplarSkinCard";
 import { useState, useEffect } from "react";
-import axios from "../../../Axios";
 import "./popularSkin.css";
+import { getPopularStickersMin } from "../../../api/StickerApi";
 
 function PopularSkin() {
     const [hotStickers, setHotStickers] = useState([]);
@@ -13,9 +13,8 @@ function PopularSkin() {
     useEffect(() => {
         const fetchHot = async () => {
             try {
-                const response = await axios.get("/stickers/stickers-withCategory?category=most_popular");
-                setHotStickers(response.data.stickers);
-                console.log(response.data);
+                const response = await getPopularStickersMin()
+                setHotStickers(response.stickers);
                 setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching stickers:', error);

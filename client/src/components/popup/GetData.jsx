@@ -1,15 +1,15 @@
 // ParentComponent.jsx
 import React, { useState, useEffect } from 'react';
 import AddToCartPopup from './AddToCartPopup';
-import axios from '../../Axios';
 import HalfPopup from "../stickers/HalfPopup"
+import { getStickers } from '../../api/StickerApi';
 function GetData() {
     const [stickerData, setStickerData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('/stickers');
+                const response = await getStickers()
                 setStickerData(response.data);
                 console.log(stickerData)
             } catch (error) {

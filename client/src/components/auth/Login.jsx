@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from '../../Axios';
 import { Link, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { userLogin } from '../../api/userApi';
 const Login = ({ onToggleForm }) => {
     const navigate = useNavigate();
     const [Error, setError] = useState(null)
@@ -24,23 +24,22 @@ const Login = ({ onToggleForm }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        axios
-            .post("users/login", formData)
-            .then((response) => {
-                console.log(response.data);
+        try {
+            const response = await userLogin(formData);
+            if (response.status === 200) {
                 const token = response.data.token;
-                console.log("console fro token", token)
-                localStorage.setItem('acc2essToken', token);
-                console.log(response)
+                localStorage.setItem('token', token);
                 navigate(`/account/${response.data.user.userId}`);
-            })
-            .catch((error) => {
-                error.response.data
-                console.error(error.response.data.error);
-                setError(error.response.data.error)
-            });
+            } else {
+                setError(response.data.error);
+            }
+        } catch (error) {
+            setError(error.response.data.error);
+            console.error(error.response.data.error);
+            console.log(error)
+        }
     };
     return (
         <section className=" mt-[5em]">

@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
+const admin = require('../models/adminModal.js');
 dotenv.config();
 
 const deleteUser = async (req, res) => {
@@ -23,53 +24,34 @@ const deleteUser = async (req, res) => {
 
 const adminLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    console.log('Received login request:', { email, password });
-
-    // Check if the user with the provided email exists and has admin role
-    const admin = await User.findOne({ email, role: 'admin' });
-    if (admin) {
-        const passwordMatch = await bcrypt.compare(password, admin.password);
-        console.log('Password match result:', passwordMatch);
-
-        if (passwordMatch) {
-            const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_KEY, {
-                expiresIn: '1h',
-            });
-            res.json({
-                success: true,
-                token,
-            });
-            return;
-        }
-    } else {
-        res.status(401).json({ error: 'Invalid admin credentials' });
+    if (!email || !password) {
+        return res.status(400).json({ message: "Please provide email and password, " });
     }
+    const user = await admin.findOne({ email, role: 'admin', isAdmin: true });
+
+    if (!user) {
+        return res.status(401).json({ message: "user not found" });
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+    }
+    const token = user.createJWT();
+    res.status(200).json({ user: { id: admin._id, email: admin.email, isAdmin: user.isAdmin }, token });
 });
 
 
 const adminRegister = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
-
-    // Check if user with the given email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        res.status(400).json({ error: 'User already exists' });
-        return;
+    const data = req.body
+    const alreadyRegistered = await admin.findOne({ email: req.body.email });
+    if (alreadyRegistered) {
+        return res.status(400).json({ message: "email already exists" });
     }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    const user = await admin.create(req.body);
+    console.log(user);
+    const token = user.createJWT();
     // Create a new admin user
-    const newAdmin = new User({
-        email,
-        password: hashedPassword,
-        confirmPassword: hashedPassword,
-        role: 'admin',
-    });
-
-    await newAdmin.save();
-
+    res.status(201).json({ user: { name: user.name, email: user.email, isAdmin: user.isAdmin }, token });
     res.status(201).json({ message: 'Admin registered successfully' });
 });
 

@@ -7,10 +7,10 @@ import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import { selectTotalPrice } from '../../store/CartSlice';
 
-import axios from "../../Axios";
 import { setUserId, setErrorData } from '../../store/userSlice';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { userRegister } from "../../api/userApi";
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -66,16 +66,18 @@ const RegisterForm = () => {
                 ],
             }
             // make API 
-            const response = await axios.post('/users/register', userData);
-            const token = response.data.token;
-            console.log("console fro token", token)
-            localStorage.setItem('acc2essToken', token);
-            const newUserId = response.data.newUser._id;
-            dispatch(setUserId(newUserId));
-            console.log('Response from server:', response.data)
+            const response = await userRegister(userData)
+            // console.log(response.token)
+            if (response.message === 'User registered successfully') {
+                const token = response.token;
+                console.log("token", token)
+                localStorage.setItem('token', token);
+                const newUserId = response.newUser._id;
+                dispatch(setUserId(newUserId));
+            }
+            dispatch(setErrorData(response.data.error));
         } catch (error) {
             console.log(error)
-            dispatch(setErrorData(error.response.data.error));
         }
 
     }

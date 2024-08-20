@@ -6,14 +6,15 @@ export const userSlice = createSlice({
     initialState: {
         userId: null,
         emailError: null,
-        phoneError: null
+        phoneError: null,
+        error: '',
     },
     reducers: {
         setUserId: (state, action) => {
             state.userId = action.payload;
         },
         setErrorData: (state, action) => {
-            state.Error = action.payload;
+            state.error = action.payload;
         },
     },
 });

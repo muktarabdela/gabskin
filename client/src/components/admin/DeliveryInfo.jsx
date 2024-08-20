@@ -1,16 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import axios from '../../Axios';
+import { updateDeliveryStatus } from '../../api/userApi';
 
 const DeliveryInfo = ({ users }) => {
     const [deliveryStatus, setDeliveryStatus] = useState({});
 
     const handleUpdateDeliveryStatus = useCallback(async (userId) => {
         try {
-            const response = await axios.put(`/stickers/update-delivery-status/${userId}`, {
-                newDeliveryStatus: deliveryStatus[userId],
-            });
-            console.log(response.data);
-            alert('Delivery status updated successfully!');
+            const response = await updateDeliveryStatus(userId, deliveryStatus);
+            if (response.status === 200) {
+                alert('Delivery status updated successfully!');
+                window.location.reload();
+            }
         } catch (error) {
             console.error('Error updating delivery status:', error);
         }

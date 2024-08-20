@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from '../../Axios';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/CartSlice';
 import { TextField } from '@material-ui/core';
+import { updateStickerS } from '../../api/StickerApi';
 
 function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [selectedSize, setSelectedSize] = useState(null);
@@ -38,24 +38,25 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         }
         try {
             setIsLoading(true);
-            const data = await axios.put(`/stickers/update/${stickerId}`, {
+            const data = {
                 size: selectedSize,
                 price: price,
                 code: stickerCode
-            });
 
-            if (data.status === 200) {
-                setStickerData(data.data.sticker);
+            }
+            const response = await updateStickerS(data, stickerId)
+            console.log(response)
+            if (response.message === 'Sticker updated successfully') {
+                setStickerData(response.sticker);
                 const stickerData = {
-                    _id: data.data.sticker._id,
-                    price: data.data.sticker.price,
+                    _id: response.sticker._id,
+                    price: response.sticker.price,
                     size: selectedSize,
                     quantity: 1,
-                    category: data.data.sticker.category,
-                    imageUrl: data.data.sticker.imageUrl,
+                    category: response.sticker.category,
+                    imageUrl: response.sticker.imageUrl,
                 };
                 dispatch(addToCart(stickerData));
-                console.log(data.data)
             }
             onAddToCart(selectedSize, price);
             onClose();

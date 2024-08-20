@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import axios from '../../Axios';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/CartSlice';
 import half_package from "../../../public/images/ourWork/Half package.jpg"
 import regular_full_package from "../../../public/images/ourWork/Regular Package.jpg"
 import special_full_package from "../../../public/images/ourWork/special full package.jpg"
 import premium_full_package from "../../../public/images/ourWork/photo_2024-01-20_19-05-47.jpg"
+import { updateStickerS } from '../../api/StickerApi';
 function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [selectedSize, setSelectedSize] = useState(null);
     const [price, setPrice] = useState(null);
@@ -38,10 +38,10 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             return (
                 <>
                     <p className='text-lg font-bold mb-2 dark:text-gray-600'>
-                        Half Package Laptop Skin - Sticker only for the back of your screen + Free delivery 
+                        Half Package Laptop Skin - Sticker only for the back of your screen + Free delivery
                     </p>
                     <p className=' dark:text-gray-600'>
-                        your laptop after installation 
+                        your laptop after installation
                     </p>
                     <img className='w-[13em] mx-auto rounded' src={half_package} alt="Half Package Laptop Skin" />
                 </>
@@ -50,11 +50,11 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             return (
                 <>
                     <p className='text-lg font-bold mb-2 dark:text-gray-600'>
-                        Regular Full Package Laptop Skin - Front and back For the back of your screen + on the keyboard area + Free delivery 
+                        Regular Full Package Laptop Skin - Front and back For the back of your screen + on the keyboard area + Free delivery
                     </p>
 
                     <p className=' dark:text-gray-600'>
-                        your laptop after installation 
+                        your laptop after installation
                     </p>
                     <img className='w-[13em] mx-auto rounded' src={regular_full_package} alt="Half Package Laptop Skin" />
                 </>
@@ -64,10 +64,10 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             return (
                 <>
                     <p className='text-lg font-bold mb-2 dark:text-gray-600'>
-                        Special Full package - For the Front, Back and for the screen edge + Free delivery 
+                        Special Full package - For the Front, Back and for the screen edge + Free delivery
                     </p>
                     <p className=' dark:text-gray-600'>
-                        your laptop after installation 
+                        your laptop after installation
                     </p>
                     <img className='w-[13em] mx-auto rounded' src={special_full_package} alt="Half Package Laptop Skin" />
                 </>
@@ -76,12 +76,12 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             return (
                 <>
                     <p className='text-lg font-bold mb-2 dark:text-gray-600'>
-                        Premium Full Package Laptop Skin - For the Front + For Back and For the bottom and screen edge  of the laptop + Free Delivery 
+                        Premium Full Package Laptop Skin - For the Front + For Back and For the bottom and screen edge  of the laptop + Free Delivery
                     </p>
                     <p className='my-2 dark:text-gray-600'>
                     </p>
                     <p className=' dark:text-gray-600'>
-                        your laptop after installation 
+                        your laptop after installation
                     </p>
                     <img className='mt-2 w-[13em] mx-auto rounded' src={premium_full_package} alt="Half Package Laptop Skin" />
                 </>
@@ -102,19 +102,20 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         }
         try {
             setIsLoading(true);
-            const data = await axios.put(`/stickers/update/${stickerId}`, {
+            const data = {
                 size: selectedSize,
                 price: price,
-            });
-            if (data.status === 200) {
-                setStickerData(data.data.sticker);
+            }
+            const response = await updateStickerS(data, stickerId)
+            if (response.message === 'Sticker updated successfully') {
+                setStickerData(response.sticker);
                 const stickerData = {
-                    _id: data.data.sticker._id,
-                    price: data.data.sticker.price,
+                    _id: response.sticker._id,
+                    price: response.sticker.price,
                     size: selectedSize,
                     quantity: 1,
-                    category: data.data.sticker.category,
-                    imageUrl: data.data.sticker.imageUrl,
+                    category: response.sticker.category,
+                    imageUrl: response.sticker.imageUrl,
                 };
                 dispatch(addToCart(stickerData));
                 console.log(stickerData);

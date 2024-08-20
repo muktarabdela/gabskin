@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../public/images/logo.png"
-import axios from "../../Axios"
 import { useNavigate } from 'react-router-dom';
+import { submitFeedback } from "../../api/userApi";
 
 function Footer() {
   const navigate = useNavigate();
@@ -13,11 +13,14 @@ function Footer() {
 
   const handleFormSubmit = async () => {
     try {
-      const response = await axios.post('/form-submission', { name, email, message });
-      setShowThanksPopup(true);
-      setName("");
-      setEmail("");
-      setMessage("");
+      const data = { name, email, message };
+      const response = await submitFeedback(data)
+      if (response.status === 200) {
+        setShowThanksPopup(true);
+        setName("");
+        setEmail("");
+        setMessage("");
+      }
     } catch (error) {
       console.log(error)
     }

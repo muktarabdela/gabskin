@@ -27,33 +27,17 @@ const registerUser = async (req, res) => {
         if (!password) {
             return res.status(400).json({ error: 'Password required' });
         }
-        if (!confirmPassword) {
-            return res.status(400).json({ error: 'Confirm password required' });
-        }
         if (!phone) {
             return res.status(400).json({ error: 'Phone number required' });
         }
 
-        // Validate email
-        const emailPattern = /^\S+@\S+\.\S+$/;
-        if (!emailPattern.test(email)) {
-            return res.status(400).json({ error: 'Invalid email format' });
-        }
-        // Validate password
-        if (password !== confirmPassword) {
-            return res.status(400).json({ error: 'Password and Confirm password do not match' });
-        }
-        // Hash the password
-        const saltRounds = 10;
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Combine user registration data with additional details
         const newUser = new User({
             name,
             email,
             phone,
-            password: hashedPassword,
+            password,
             confirmPassword,
             totalPrice,
             deliveryInfo,
@@ -62,8 +46,8 @@ const registerUser = async (req, res) => {
         });
         console.log('New user ID:', newUser._id);
         await newUser.save();
-        const expirationTime = '1d';
-        const token = jwt.sign({ email, userId: newUser._id }, process.env.JWT_KEY, { expiresIn: expirationTime });
+        const token = newUser.createJWT();
+
         return res.status(200).json({ message: 'User registered successfully', token, newUser });
     } catch (error) {
         console.error('Error during user registration:', error);
@@ -74,32 +58,21 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        const user = await User.findOne({ email });
+        if (!email || !password) {
+            return res.status(400).json({ message: "Please provide email and password, " });
+        }
+        const user = await User.findOne({ email, role: 'user', isAdmin: false });
 
         if (!user) {
-            return res.status(401).json({ error: 'Invalid email or password' });
+            return res.status(401).json({ message: "user not found" });
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        if (!passwordMatch) {
-            return res.status(401).json({ error: 'Invalid email or password' });
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid credentials" });
         }
-
-        const expirationTime = '1d';
-
-        const token = jwt.sign({ email, userId: user._id }, process.env.JWT_KEY, { expiresIn: expirationTime });
-
-        res.status(200).json({
-            message: 'login success',
-            token,
-            user: {
-                email: user.email,
-                userId: user._id,
-                isAdmin: user.isAdmin,
-            }
-        });
+        const token = user.createJWT();
+        res.status(200).json({ user: { id: admin._id, email: admin.email, isAdmin: user.isAdmin }, token });
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ error: 'Login failed' });
@@ -125,7 +98,7 @@ const paymentInfo = async (req, res) => {
         await user.save();
 
         // Send a success response
-        res.status(200).json({ success: true, message: 'Payment information updated successfully.' });
+        res.status(200).json({ success: true, message: 'Payment information add successfully' });
     } catch (error) {
         console.error('Error updating payment information:', error);
         res.status(500).json({ success: false, message: 'Internal server error.' });
@@ -154,4 +127,4 @@ const getUserInfo = async (req, res) => {
 
 
 
-module.exports = { registerUser, loginUser, paymentInfo, getUserInfo,};
+module.exports = { registerUser, loginUser, paymentInfo, getUserInfo, };

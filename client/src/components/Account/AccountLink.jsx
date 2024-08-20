@@ -4,13 +4,12 @@ import { IconButton } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { jwtDecode } from 'jwt-decode';
 
-import AuthForm from '../auth/AuthForm';
-import UserAccountDetails from './UserAccountDetails';
 
 const AccountLink = () => {
     const [showAuthForm, setShowAuthForm] = useState(false);
-    const token = localStorage.getItem('acc2essToken');
+    const token = localStorage.getItem('token');
     const isValidToken = typeof token === 'string' && token.length > 0;
+
     const decodedToken = isValidToken ? jwtDecode(token) : null;
     const userIdFromToken = decodedToken ? decodedToken.userId : null;
 

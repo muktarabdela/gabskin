@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../../Axios';
+import { updatePaymentStatus } from '../../api/userApi';
 
 const PaymentInfo = ({ users }) => {
   console.log(users[2]?.totalPrice)
 
   const [paymentStatus, setPaymentStatus] = useState({});
-  const [userPayments, setUserPayments] = useState({});
   const handleUpdatePaymentStatus = async (userId) => {
     try {
-      const response = await axios.put(`/stickers/update-payment-status/${userId}`, {
-        newPaymentStatus: paymentStatus[userId],
-      });
-      console.log(response.data);
-      alert('Payment status updated successfully!');
+      const response = await updatePaymentStatus(userId, paymentStatus);
+      if (response.status === 200) {
+        alert('Payment status updated successfully!');
+        window.location.reload();
+      }
     } catch (error) {
       console.error('Error updating payment status:', error);
     }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StickersCard from "./StickersCard";
-import axios from "../../Axios";
 import Pagination from './Pagination';
+import { fetchStickersByCategory } from "../../api/StickerApi";
 
 const Sticker = ({ category }) => {
     const [stickersData, setStickersData] = useState([]);
@@ -10,11 +10,10 @@ const Sticker = ({ category }) => {
     const stickersPerPage = 12;
 
     useEffect(() => {
-        const fetchStickersByCategory = async () => {
+        const fetchStickers = async () => {
             try {
-                const response = await axios.get(
-                    `/stickers/stickers-withCategory?category=${category}`);
-                const reversedStickers = response.data.stickers
+                const response = await fetchStickersByCategory(category);
+                const reversedStickers = response.stickers
                 setStickersData(reversedStickers);
                 setIsLoading(false);
             } catch (error) {
@@ -22,7 +21,7 @@ const Sticker = ({ category }) => {
                 setIsLoading(false);
             }
         };
-        fetchStickersByCategory();
+        fetchStickers();
     }, [category]);
     const stickersContainerRef = useRef();
 

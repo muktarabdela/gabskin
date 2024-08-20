@@ -5,9 +5,9 @@ import DeliveryInfo from '../components/admin/DeliveryInfo';
 import Orders from '../components/admin/Orders';
 import PaymentInfo from '../components/admin/PaymentInfo';
 import Messages from '../components/admin/Messages';
-import axios from '../Axios';
 import EditProfilePopup from '../components/admin/EditProfilePopup';
 import { jwtDecode } from 'jwt-decode';
+import { getAdmin } from '../api/adminApi';
 const Admin = ({ userId }) => {
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
     const [userToUpdate, setUserToUpdate] = useState(null);
@@ -15,27 +15,28 @@ const Admin = ({ userId }) => {
     const [error, setError] = useState(null)
     const [usersData, setUsersData] = useState([]);
 
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('token');
 
     const isValidToken = typeof token === 'string' && token.length > 0;
     const decodedToken = isValidToken ? jwtDecode(token) : null;
     const userIdFromToken = decodedToken ? decodedToken.id : null;
 
     const handleLogout = () => {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('token');
         window.location.reload();
     };
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('/users/admin');
-                console.log(response.data);
-                // Filter users with role 'user'
-                const usersWithUserRole = response.data.filter(user => user.role === 'user');
-                setUsersData(usersWithUserRole);
+                const response = await getAdmin()
+                if (response.status === 200) {
+                    // Filter users with role 'user'
+                    const usersWithUserRole = response.data.filter(user => user.role === 'user');
+                    setUsersData(usersWithUserRole);
+                }
             } catch (error) {
-                console.error('Error fetching user data:', error.message);
+                console.error('Error fetching user data:', error);
             }
         };
         fetchUserData();

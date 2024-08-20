@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
     setFirstName,
@@ -9,6 +9,7 @@ import {
 } from '../store/deliverySlice';
 // register slice 
 import { setName, setEmail, setPassword, setConfirmPassword } from "../store/registrationSlice"
+import { jwtDecode } from 'jwt-decode';
 export const MultiStepContext = createContext()
 
 const CheckoutContextProvider = ({ children }) => {
@@ -24,6 +25,45 @@ const CheckoutContextProvider = ({ children }) => {
         subCity: "",
         DeliveryLocation: ""
     })
+
+    const getToken = () => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('token');
+        }
+        return null;
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    };
+
+    const logoutCheck = () => {
+        const token = getToken();
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                const admin = decoded.role === 'admin';
+                const isAdmin = decoded.isAdmin === true;
+                console.log("Admin:", admin, "Is Admin:", isAdmin);
+                if (admin || isAdmin) {
+                    const expDate = new Date(decoded.exp * 1000);
+                    console.log("Token Expiration Date:", expDate.toUTCString());
+                    if (decoded.exp * 1000 < Date.now()) {
+                        logout();
+                    }
+                }
+            } catch (e) {
+                console.error("Invalid token", e);
+            }
+        }
+    }
+
+    useEffect(() => {
+        const intervalId = setInterval(logoutCheck, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
 
     function submitDeliveryData() {
         dispatch(setFirstName(DeliveryData.firstName));

@@ -18,7 +18,7 @@ import Transform from './pages/Transform'
 
 
 const PrivateRoute = ({ element }) => {
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem('token');
   const isValidToken = typeof token === 'string' && token.length > 0;
 
   if (!isValidToken) {
@@ -84,7 +84,7 @@ const App = () => {
             </>
           } />
           <Route path="/login" element={<AdminAuth />} />
-          {/* <Route path="/admin" element={<PrivateRoute element={<Admin />} />} /> */}
+          <Route path="/admin" element={<PrivateRoute element={<Admin />} />} />
           <Route path='/checkout' element={
             <>
               <CheckoutPage />
