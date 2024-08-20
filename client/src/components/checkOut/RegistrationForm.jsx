@@ -67,7 +67,7 @@ const RegisterForm = () => {
             }
             // make API 
             const response = await userRegister(userData)
-            // console.log(response.token)
+            console.log(response)
             if (response.message === 'User registered successfully') {
                 const token = response.token;
                 console.log("token", token)
