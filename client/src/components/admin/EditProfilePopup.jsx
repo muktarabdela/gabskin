@@ -28,7 +28,7 @@ const EditProfilePopup = ({ isOpen, closePopup, handleUpdateProfile, error }) =>
             <div className="popup-content dark:bg-gray-300 rounded-lg overflow-hidden p-8 w-96">
                 <h2 className="text-2xl font-bold mb-4 text-center text-black">Edit Profile</h2>
 
-                <p className='text-red-600 text-[1.3em]'>{error}</p>
+                <p className='text-red-600 text-md'>{error}</p>
                 <div>
                     <label
                         htmlFor="email"

@@ -7,8 +7,10 @@ import PaymentInfo from '../components/admin/PaymentInfo';
 import Messages from '../components/admin/Messages';
 import EditProfilePopup from '../components/admin/EditProfilePopup';
 import { jwtDecode } from 'jwt-decode';
-import { getAdmin } from '../api/adminApi';
+import { getAdmin, updateAdmin } from '../api/adminApi';
+import { useNavigate } from 'react-router-dom';
 const Admin = ({ userId }) => {
+    const navigate = useNavigate();
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
     const [userToUpdate, setUserToUpdate] = useState(null);
     const [selectedSection, setSelectedSection] = useState('userInfo');
@@ -19,8 +21,13 @@ const Admin = ({ userId }) => {
 
     const isValidToken = typeof token === 'string' && token.length > 0;
     const decodedToken = isValidToken ? jwtDecode(token) : null;
-    const userIdFromToken = decodedToken ? decodedToken.id : null;
-
+    const userIdFromToken = decodedToken ? decodedToken?.userId : null;
+    const adminRole = decodedToken ? decodedToken.role : null;
+    useEffect(() => {
+        if (!isValidToken || adminRole !== 'admin') {
+            navigate('/login', { replace: true });
+        }
+    }, [isValidToken, navigate, adminRole]);
     const handleLogout = () => {
         localStorage.removeItem('token');
         window.location.reload();
@@ -30,6 +37,7 @@ const Admin = ({ userId }) => {
         const fetchUserData = async () => {
             try {
                 const response = await getAdmin()
+                console.log(response);
                 if (response.status === 200) {
                     // Filter users with role 'user'
                     const usersWithUserRole = response.data.filter(user => user.role === 'user');
@@ -65,17 +73,22 @@ const Admin = ({ userId }) => {
 
     const handleUpdateProfile = async ({ newEmail, newPassword, confirmPassword, currentPassword }) => {
         try {
-            const response = await axios.put('/admin/update-profile', {
+            const data = {
                 userId: userIdFromToken,
                 newEmail,
                 newPassword,
                 confirmPassword,
                 currentPassword,
-            });
-            console.log('Profile Update:', response.data);
-            alert("Profile updated successfully");
-            window.location.reload();
-            closeEditPopup();
+            }
+            const response = await updateAdmin(data)
+            console.log('Profile Update:', response);
+            setError(response.data.error);
+            if (response.data.success) {
+                alert("Profile updated successfully");
+                handleLogout()
+                closeEditPopup();
+
+            }
         } catch (error) {
             console.log(error)
             setError(error.response.data.error);

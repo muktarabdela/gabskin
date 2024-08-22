@@ -11,6 +11,7 @@ import { setUserId, setErrorData } from '../../store/userSlice';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { userRegister } from "../../api/userApi";
+import PasswordCriteria from "../PasswordCriteria";
 
 const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -21,12 +22,14 @@ const RegisterForm = () => {
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
+
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
+    console.log(registerData.password, "registerData");
     const deliveryData = useSelector(selectDelivery);
     const registrationData = useSelector(selectRegistration);
     const cartItems = useSelector(selectCartItems);
     const totalPrice = useSelector((state) => selectTotalPrice(state));
-    console.log(totalPrice)
+    const [passwordTouched, setPasswordTouched] = useState(false);
 
     // Use Redux state for error data
     const dispatch = useDispatch();
@@ -75,7 +78,7 @@ const RegisterForm = () => {
                 const newUserId = response.newUser._id;
                 dispatch(setUserId(newUserId));
             }
-            dispatch(setErrorData(response.data.error));
+            dispatch(setErrorData(response.data.error || response.data.message));
         } catch (error) {
             console.log(error)
         }
@@ -148,6 +151,7 @@ const RegisterForm = () => {
                         onInput={() => setNameError(null)}
                         value={DeliveryData["firstName"]}
                         onChange={(e) => setDeliveryData({ ...DeliveryData, "firstName": e.target.value })}
+                        onFocus={() => setPasswordTouched(false)}
                     />
 
                 </div>
@@ -162,6 +166,7 @@ const RegisterForm = () => {
                         onInput={() => setEmailErrorInput(null)}
                         value={registerData["Email"]}
                         onChange={(e) => setRegisterData({ ...registerData, "Email": e.target.value })}
+                        onFocus={() => setPasswordTouched(false)}
                     />
                 </div>
 
@@ -177,13 +182,14 @@ const RegisterForm = () => {
                             onInput={() => setPasswordError(null)}
                             value={registerData["password"]}
                             onChange={(e) => setRegisterData({ ...registerData, "password": e.target.value })}
+                            onFocus={() => setPasswordTouched(true)}
                         />
-
+                        {passwordTouched && <PasswordCriteria password={registerData.password} />}
                     </div>
                     <button
                         type="button"
                         onClick={togglePasswordVisibility}
-                        className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
+                        className="absolute top-[2.5em] right-4 transform -translate-y-1/2 focus:outline-none"
                     >
                         {showPassword ? (
                             // Lock Icon
@@ -197,65 +203,75 @@ const RegisterForm = () => {
                             />
                         )}
                     </button>
+
+
+
                 </div>
 
-                <div className='relative'>
+                <div >
 
-                    <div className={`mb-2 ${passwordConfirmError ? 'error' : ''}`}>
-                        <p className="text-red-400">{passwordConfirmError}</p>
-                        <TextField
-                            type={showConfirmPassword ? "text" : "password"} label="Confirm password"
-                            margin="normal"
-                            variant="outlined"
-                            color="secondary"
-                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordConfirmError ? 'border-red-500 bg-red-100' : ''
-                                }`}
-                            onInput={() => setPasswordConfirmError(null)}
-                            value={registerData["confirmPassword"]}
-                            onChange={(e) => setRegisterData({ ...registerData, "confirmPassword": e.target.value })}
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        onClick={toggleConfirmPasswordVisibility}
-                        className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
-                    >
-                        {showConfirmPassword ? (
-                            // Lock Icon
-                            <VisibilityOffIcon
-                                className='mt-3 text-black'
-                            />
-                        ) : (
-                            // Eye Icon
-                            <VisibilityIcon
-                                className='mt-3 text-black'
-                            />
-                        )}
-                    </button>
-                </div>
 
-                <div className="flex mt-7">
-                    <div className=" mx-auto" >
-                        <Button onClick={() => setStep(1)} variant="contained" color="primary"> Back</Button>
-                    </div>
-                    <div className="mx-auto">
-                        <Button
-                            className=""
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                if (validateInput()) {
-                                    setRegisterData({ ...registerData, "Email": registerData["Email"] });
-                                    setStep(3);
-                                    submitRegisterData();
-                                    handleRegistration();
-                                }
-                            }}
+                    <div className='relative'>
+
+                        <div className={`mb-2 ${passwordConfirmError ? 'error' : ''}`}>
+                            <p className="text-red-400">{passwordConfirmError}</p>
+                            <TextField
+                                type={showConfirmPassword ? "text" : "password"} label="Confirm password"
+                                margin="normal"
+                                variant="outlined"
+                                color="secondary"
+                                className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordConfirmError ? 'border-red-500 bg-red-100' : ''
+                                    }`}
+                                onInput={() => setPasswordConfirmError(null)}
+                                value={registerData["confirmPassword"]}
+                                onChange={(e) => setRegisterData({ ...registerData, "confirmPassword": e.target.value })}
+                                onFocus={() => setPasswordTouched(false)}
+
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            onClick={toggleConfirmPasswordVisibility}
+                            className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
                         >
-                            Register
-                        </Button>
+                            {showConfirmPassword ? (
+                                // Lock Icon
+                                <VisibilityOffIcon
+                                    className='mt-3 text-black'
+                                />
+                            ) : (
+                                // Eye Icon
+                                <VisibilityIcon
+                                    className='mt-3 text-black'
+                                />
+                            )}
+                        </button>
+                    </div>
+
+                    <div className="flex mt-7">
+                        <div className=" mx-auto" >
+                            <Button onClick={() => setStep(1)} variant="contained" color="primary"> Back</Button>
+                        </div>
+                        <div className="mx-auto">
+                            <Button
+                                className=""
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    if (validateInput()) {
+                                        setRegisterData({ ...registerData, "Email": registerData["Email"] });
+                                        setStep(3);
+                                        submitRegisterData();
+                                        handleRegistration();
+                                    }
+                                }}
+                            >
+                                Register
+                            </Button>
+                        </div>
                     </div>
                 </div>
+
             </>
         </div >
     );

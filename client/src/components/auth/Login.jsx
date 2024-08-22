@@ -28,10 +28,11 @@ const Login = ({ onToggleForm }) => {
         e.preventDefault();
         try {
             const response = await userLogin(formData);
-            if (response.status === 200) {
-                const token = response.data.token;
+            console.log(response)
+            if (response.status === true) {
+                const token = response.token;
                 localStorage.setItem('token', token);
-                navigate(`/account/${response.data.user.userId}`);
+                navigate(`/account/${response.user.id}`);
             } else {
                 setError(response.data.error);
             }

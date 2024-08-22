@@ -48,13 +48,42 @@ export const getAdmin = async () => {
     const token = getToken();
     console.log(token);
     try {
-        const response = await instance.get('/users/admin', {
+        const response = await instance.get('admin/all-users', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
         return response;
 
+    } catch (error) {
+        if (error.response) {
+            // Handle the error response (e.g., 401 Unauthorized)
+            return error.response;
+        } else {
+            // Handle other types of errors (e.g., network errors)
+            console.error(error);
+            throw error;
+        }
+    }
+}
+
+// create a function to update admin       const response = await axios.put('/admin/update-profile', {
+//     userId: userIdFromToken,
+//     newEmail,
+//     newPassword,
+//     confirmPassword,
+//     currentPassword,
+// });
+export const updateAdmin = async (data) => {
+    console.log(data);
+    const token = getToken();
+    try {
+        const response = await instance.put('/admin/update-profile', data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
     } catch (error) {
         if (error.response) {
             // Handle the error response (e.g., 401 Unauthorized)

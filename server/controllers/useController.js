@@ -32,6 +32,25 @@ const registerUser = async (req, res) => {
         if (!password) {
             return res.status(400).json({ error: 'Password required' });
         }
+        // check if password is strong enough and more than 6 characters
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long" });
+        }
+        // check password is strong enough
+        if (!password.match(/[a-z]/g)) {
+            return res.status(400).json({ message: "Password must contain at least one lowercase letter" });
+        }
+        if (!password.match(/[A-Z]/g)) {
+            return res.status(400).json({ message: "Password must contain at least one uppercase letter" });
+        }
+        if (!password.match(/[0-9]/g)) {
+            return res.status(400).json({ message: "Password must contain at least one number" });
+        }
+        if (!password.match(/[^a-zA-Z\d]/g)) {
+            return res.status(400).json({ message: "Password must contain at least one special character" });
+        }
+
+
         if (!phone) {
             return res.status(400).json({ error: 'Phone number required' });
         }
@@ -58,7 +77,7 @@ const registerUser = async (req, res) => {
         await newUser.save();
         const token = newUser.createJWT();
 
-        return res.status(200).json({ message: 'User registered successfully', token, newUser });
+        return res.status(200).json({ status: true, message: 'User registered successfully', token, newUser });
     } catch (error) {
         console.error('Error during user registration:', error);
         return res.status(500).json({ message: 'Failed to create a new user' });
@@ -82,7 +101,7 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
         const token = user.createJWT();
-        res.status(200).json({ user: { id: user._id, email: user.email, isAdmin: user.isAdmin }, token });
+        res.status(200).json({ status: true, user: { id: user._id, email: user.email, isAdmin: user.isAdmin }, token });
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ error: 'Login failed' });

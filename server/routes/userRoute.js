@@ -20,16 +20,4 @@ router.get('/protected', authMiddleware.verifyToken, (req, res) => {
 
 // user info 
 router.get('/get-user-info/:userId', authMiddleware.verifyToken, getUserInfo);
-
-// admin route
-router.get('/admin', authMiddleware.verifyToken, authMiddleware.checkAdmin, async (req, res) => {
-    try {
-        const users = await User.find().select('-password');
-        res.json(users);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
 module.exports = router;

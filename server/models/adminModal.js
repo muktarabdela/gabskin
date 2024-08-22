@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require("mongoose");
+const User = require('./userModel');
 
 // Define the User schema
 const adminSchema = new mongoose.Schema({
@@ -11,7 +12,9 @@ const adminSchema = new mongoose.Schema({
             'Please provide a valid email',
         ],
     },
-    password: { type: String, required: [true, "Password is required"] },
+    password: {
+        type: String,
+    },
     role: { type: String, default: 'admin' },
     isAdmin: {
         type: Boolean,
@@ -29,7 +32,7 @@ adminSchema.pre("save", async function (next) {
 
 // Method to create a JWT
 adminSchema.methods.createJWT = function () {
-    return jwt.sign({ name: this.name, role: this.role, email: this.email, isAdmin: this.isAdmin }, process.env.JWT_SECRET, {
+    return jwt.sign({ userId: this._id, name: this.name, role: this.role, email: this.email, isAdmin: this.isAdmin }, process.env.JWT_SECRET, {
         expiresIn: '2d',
     });
 }

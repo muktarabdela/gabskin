@@ -5,6 +5,7 @@ import { loginSuccess, loginFailure } from '../../store/authSlice';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { loginAdmin } from '../../api/adminApi';
+import { jwtDecode } from 'jwt-decode';
 const AdminAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -21,7 +22,11 @@ const AdminAuth = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
+        const isValidToken = typeof token === 'string' && token.length > 0;
+        const decodedToken = isValidToken ? jwtDecode(token) : null;
+        const adminRole = decodedToken ? decodedToken.role : null;
+        console.log(adminRole)
+        if (isValidToken && adminRole === 'admin') {
             navigate('/admin', { replace: true });
         }
     }, [navigate]);
