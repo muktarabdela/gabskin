@@ -6,12 +6,13 @@ const userRouter = require('./routes/userRoute.js');
 const stickersRouter = require('./routes/stickersRouter.js');
 const formSubmissionRoutes = require('./routes/formSubmissionRoutes.js');
 const adminRoute = require('./routes/adminRouter.js');
-
+const sanitize = require("sanitize");
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(sanitize.middleware);
 
 app.get('/', (req, res) => {
     res.send({ message: 'hello world' });
@@ -20,7 +21,6 @@ app.get('/', (req, res) => {
 // users
 app.use('/api/users', userRouter);
 // admin
-
 app.use('/api/admin', adminRoute);
 
 // stickers

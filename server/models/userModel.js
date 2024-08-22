@@ -3,6 +3,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const userSchema = new mongoose.Schema({
+    // userHash: {
+    //     type: String, required: [true, "userHash is required"],
+    // },
     name: {
         required: [true, "Name is required"],
         type: String,
@@ -20,7 +23,6 @@ const userSchema = new mongoose.Schema({
         maxlength: 15,
     },
     password: { type: String, required: [true, "Password is required"] },
-
     totalPrice: {
         type: Number,
     },
@@ -87,6 +89,7 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
 });
+
 // Pre-save hook to hash the password before saving
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();

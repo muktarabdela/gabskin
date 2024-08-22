@@ -36,9 +36,14 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'Phone number required' });
         }
 
+        // generate hash
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        console.log('Hash:', hash);
 
         // Combine user registration data with additional details
         const newUser = new User({
+            userHash: hash,
             name,
             email,
             phone,
@@ -77,7 +82,7 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
         const token = user.createJWT();
-        res.status(200).json({ user: { id: admin._id, email: admin.email, isAdmin: user.isAdmin }, token });
+        res.status(200).json({ user: { id: user._id, email: user.email, isAdmin: user.isAdmin }, token });
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ error: 'Login failed' });
@@ -113,8 +118,11 @@ const paymentInfo = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
     try {
-        const userId = req.params.userId;
-
+        const userId = req.user.userId;
+        const userIdFromParams = req.params.userId;
+        if (userId !== userIdFromParams) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
         const userInfo = await User.findById(userId).populate('orders.stickers');
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: 'Invalid user ID' });
@@ -128,8 +136,6 @@ const getUserInfo = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
 
 
 module.exports = { registerUser, loginUser, paymentInfo, getUserInfo, };

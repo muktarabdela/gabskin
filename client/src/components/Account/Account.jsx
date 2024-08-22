@@ -22,6 +22,7 @@ const Account = () => {
             try {
                 if (userIdFromToken) {
                     const response = await getUserInfo(userIdFromToken);
+                    console.log(response)
                     setUserInfo(response);
                     setLoading(false);
                 }

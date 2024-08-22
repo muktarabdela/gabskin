@@ -13,7 +13,7 @@ const LaptopSkin = ({ category }) => {
         const fetchStickers = async () => {
             try {
                 const response = await fetchStickersByCategory(category);
-                const reversedStickers = response.stickers.reverse();
+                const reversedStickers = response?.stickers?.reverse();
                 setStickersData(reversedStickers);
                 setIsLoading(false);
             } catch (error) {

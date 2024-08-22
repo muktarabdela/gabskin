@@ -27,7 +27,7 @@ const Sticker = ({ category }) => {
 
     const indexOfLastSticker = currentPage * stickersPerPage;
     const indexOfFirstSticker = indexOfLastSticker - stickersPerPage;
-    const currentStickers = stickersData.slice(indexOfFirstSticker, indexOfLastSticker);
+    const currentStickers = stickersData?.slice(indexOfFirstSticker, indexOfLastSticker);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
