@@ -10,15 +10,14 @@ const Account = () => {
     const { userId } = useParams();
     console.log(userId)
     const navigate = useNavigate();
+
     const token = localStorage.getItem('token');
     const isValidToken = typeof token === 'string' && token.length > 0;
+    const decodedToken = isValidToken ? jwtDecode(token) : null;
+    const userIdFromToken = decodedToken?.userId;
     useEffect(() => {
         // create function for this
         const getUserData = async () => {
-            const token = localStorage.getItem('token');
-            const isValidToken = typeof token === 'string' && token.length > 0;
-            const decodedToken = isValidToken ? jwtDecode(token) : null;
-            const userIdFromToken = decodedToken?.userId;
             try {
                 if (userIdFromToken) {
                     const response = await getUserInfo(userIdFromToken);
@@ -32,7 +31,7 @@ const Account = () => {
         }
         getUserData();
     }, [userId, navigate]);
-    if (userId === "undefined" || userId === "null") {
+    if (userId === "undefined" || userId === "null" || userIdFromToken !== "user") {
         return <AuthForm />;
 
     }
