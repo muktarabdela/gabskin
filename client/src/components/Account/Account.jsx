@@ -8,20 +8,20 @@ const Account = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
-    console.log(userId)
     const navigate = useNavigate();
 
     const token = localStorage.getItem('token');
     const isValidToken = typeof token === 'string' && token.length > 0;
     const decodedToken = isValidToken ? jwtDecode(token) : null;
     const userIdFromToken = decodedToken?.userId;
+    const userRole = decodedToken?.role
     useEffect(() => {
         // create function for this
         const getUserData = async () => {
             try {
                 if (userIdFromToken) {
                     const response = await getUserInfo(userIdFromToken);
-                    console.log(response)
+                    // console.log(response)
                     setUserInfo(response);
                     setLoading(false);
                 }
@@ -31,7 +31,7 @@ const Account = () => {
         }
         getUserData();
     }, [userId, navigate]);
-    if (userId === "undefined" || userId === "null" || userIdFromToken !== "user") {
+    if (userId === "undefined" || userId === "null" || userRole !== "user") {
         return <AuthForm />;
 
     }
