@@ -31,7 +31,7 @@ const Account = () => {
         }
         getUserData();
     }, [userId, navigate]);
-    if (userId === "undefined" || userId === "null" || userRole !== "user") {
+    if (userId === "undefined" || userId === "null" || userRole !== "user" || !isValidToken) {
         return <AuthForm />;
 
     }
