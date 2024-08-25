@@ -11,12 +11,12 @@ router.post('/login', adminLogin);
 
 // admin register route
 router.post('/register', adminRegister);
-router.put('/update-profile', authMiddleware.verifyToken, authMiddleware.checkAdmin, updateProfile);
+router.put('/update-profile', [authMiddleware.verifyToken, authMiddleware.checkAdmin], updateProfile);
 
-router.delete('/delete/:userId', authMiddleware.verifyToken, authMiddleware.checkAdmin, deleteUser)
+router.delete('/delete/:userId', [authMiddleware.verifyToken, authMiddleware.checkAdmin], deleteUser)
 
 // admin route
-router.get('/all-users', authMiddleware.verifyToken, authMiddleware.checkAdmin, getUsers);
+router.get('/all-users', [authMiddleware.verifyToken, authMiddleware.checkAdmin], getUsers);
 
 
 module.exports = router

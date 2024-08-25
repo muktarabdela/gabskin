@@ -78,14 +78,11 @@ const adminRegister = asyncHandler(async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
-        const { userId, currentPassword, newEmail, newPassword, confirmPassword } = req.body;
-        const userIdFromToken = req.user.userId;
-        if (userId !== userIdFromToken) {
-            return res.status(400).json({ success: false, error: 'Unauthorized' });
-        }
+        const { currentPassword, newEmail, newPassword, confirmPassword } = req.body;
+        const userId = req.user.userId;
         const user = await admin.findById(userId).maxTime(20000);
         if (!user) {
-            return res.status(404).json({ success: false, error: 'User not found' });
+            return res.status(404).json({ success: false, error: 'admin not found' });
         }
         const existingUser = await admin.findOne({ email: newEmail });
         if (existingUser) {
