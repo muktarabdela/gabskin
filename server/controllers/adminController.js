@@ -40,41 +40,41 @@ const adminLogin = asyncHandler(async (req, res) => {
     res.status(200).json({ user: { id: admin._id, email: admin.email, isAdmin: user.isAdmin }, token });
 });
 
-const adminRegister = asyncHandler(async (req, res) => {
-    const data = req.body
-    const { name, password, email } = req.body
+// const adminRegister = asyncHandler(async (req, res) => {
+//     const data = req.body
+//     const { name, password, email } = req.body
 
-    const alreadyRegistered = await admin.findOne({ email: req.body.email });
-    if (alreadyRegistered) {
-        return res.status(400).json({ message: "email already exists" });
-    }
-    // check if password is strong enough and more than 6 characters
-    if (password.length < 6) {
-        return res.status(400).json({ message: "Password must be at least 6 characters long" });
-    }
-    // check password is strong enough
-    if (!password.match(/[a-z]/g)) {
-        return res.status(400).json({ message: "Password must contain at least one lowercase letter" });
-    }
-    if (!password.match(/[A-Z]/g)) {
-        return res.status(400).json({ message: "Password must contain at least one uppercase letter" });
-    }
-    if (!password.match(/[0-9]/g)) {
-        return res.status(400).json({ message: "Password must contain at least one number" });
-    }
-    if (!password.match(/[^a-zA-Z\d]/g)) {
-        return res.status(400).json({ message: "Password must contain at least one special character" });
-    }
+//     const alreadyRegistered = await admin.findOne({ email: req.body.email });
+//     if (alreadyRegistered) {
+//         return res.status(400).json({ message: "email already exists" });
+//     }
+//     // check if password is strong enough and more than 6 characters
+//     if (password.length < 6) {
+//         return res.status(400).json({ message: "Password must be at least 6 characters long" });
+//     }
+//     // check password is strong enough
+//     if (!password.match(/[a-z]/g)) {
+//         return res.status(400).json({ message: "Password must contain at least one lowercase letter" });
+//     }
+//     if (!password.match(/[A-Z]/g)) {
+//         return res.status(400).json({ message: "Password must contain at least one uppercase letter" });
+//     }
+//     if (!password.match(/[0-9]/g)) {
+//         return res.status(400).json({ message: "Password must contain at least one number" });
+//     }
+//     if (!password.match(/[^a-zA-Z\d]/g)) {
+//         return res.status(400).json({ message: "Password must contain at least one special character" });
+//     }
 
 
 
-    const user = await admin.create(req.body);
-    console.log(user);
-    const token = user.createJWT();
-    // Create a new admin user
-    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin }, token });
-    res.status(201).json({ message: 'Admin registered successfully' });
-});
+//     const user = await admin.create(req.body);
+//     console.log(user);
+//     const token = user.createJWT();
+//     // Create a new admin user
+//     res.status(201).json({ user: { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin }, token });
+//     res.status(201).json({ message: 'Admin registered successfully' });
+// });
 
 const updateProfile = async (req, res) => {
     try {

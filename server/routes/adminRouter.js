@@ -3,15 +3,17 @@ const router = express.Router();
 const { adminLogin, adminRegister, updateProfile, deleteUser, getUsers } = require('../controllers/adminController.js');
 const authMiddleware = require('../middleware/authenticateToken.js');
 const User = require('../models/userModel.js');
+//import rate limiter
+const rateLimitter = require("../middleware/rateLimiter.js")
 
 
 
 // Admin login route
-router.post('/login', adminLogin);
+router.post('/login',rateLimitter, adminLogin);
 
 // admin register route
-router.post('/register', adminRegister);
-router.put('/update-profile', authMiddleware.verifyToken, authMiddleware.checkAdmin, updateProfile);
+// router.post('/register', adminRegister);
+router.put('/update-profile', [authMiddleware.verifyToken, authMiddleware.checkAdmin], updateProfile);
 
 router.delete('/delete/:userId', authMiddleware.verifyToken, authMiddleware.checkAdmin, deleteUser)
 
