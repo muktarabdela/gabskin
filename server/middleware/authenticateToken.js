@@ -9,20 +9,28 @@ const verifyToken = async (req, res, next) => {
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
     }
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = { email: decoded.email, role: decoded.role, isAdmin: decoded.isAdmin, userId: decoded.userId };
 
-        if (!req.user) {
-            return res.status(401).json({ message: 'Invalid token' });
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            console.log(err);
+            return res.status(401).send({
+                message: "Unauthorized!",
+                status: false,
+            });
+        }
+        // console.log("Here is the decoded token");
+        // console.log("decoded token ",decoded);
+
+        if (decoded) {
+            req.user = {
+                email: decoded.email, role: decoded.role, isAdmin: decoded.isAdmin, userId: decoded.userId
+            };
         }
 
         next();
-    } catch (error) {
-        console.error(error);
-        res.status(401).json({ message: 'Unauthorized' });
-    }
+    });
 };
+
 
 // function to check if the user is admin
 const checkAdmin = async (req, res, next) => {
@@ -33,11 +41,11 @@ const checkAdmin = async (req, res, next) => {
     try {
         const email = req.user.email;
         const user = await Admin.findOne({ email: email, role: 'admin', isAdmin: true });
-        if (!user) {
-            return res.status(401).json({ message: 'admin user not found' });
-        }
+        // if (!user) {
+        //     return res.status(401).json({ message: 'admin user not found' });
+        // }
         if (user.role !== 'admin' || !user.isAdmin) {
-            return res.status(401).json({ message: 'user not admin' });
+            return res.status(401).json({ message: 'Unauthorized' });
         }
         next();
     } catch (error) {
