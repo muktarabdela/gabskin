@@ -45,7 +45,6 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
 
             }
             const response = await updateStickerS(data, stickerId)
-            console.log(response)
             if (response.message === 'Sticker updated successfully') {
                 setStickerData(response.sticker);
                 const stickerData = {
@@ -55,6 +54,7 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     quantity: 1,
                     category: response.sticker.category,
                     imageUrl: response.sticker.imageUrl,
+                    name: response.sticker.name
                 };
                 dispatch(addToCart(stickerData));
             }
