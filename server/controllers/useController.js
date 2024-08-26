@@ -10,9 +10,9 @@ dotenv.config();
 const registerUser = async (req, res) => {
     try {
         const { name, email, phone, password, confirmPassword, totalPrice, deliveryInfo, orders } = req.body
-        const stickerName = orders[0].stickers[0]
+        // const stickerName = orders[0].stickers[0]
         // 
-        console.log(stickerName)
+        // console.log(stickerName)
         // Check if the email already exists
         const existingUserEmail = await User.findOne({ email }).lean();
         if (existingUserEmail) {

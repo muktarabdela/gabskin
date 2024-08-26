@@ -97,22 +97,22 @@ const adminLoginInputValidator = async (req, res, next) => {
 			.status(400)
 			.json({ success: false, error: "Email is not valid" });
 	}
+	next();
 };
 
 // upadte profile input validator
 const updateProfileInputValidator = async (req, res, next) => {
 	const { currentPassword, newEmail, newPassword, confirmPassword } = req.body;
 
-	if (!currentPassword) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Current password is required" });
-	}
-
 	if (!newEmail) {
 		return res
 			.status(400)
 			.json({ success: false, error: "New email is required" });
+	}
+	if (!currentPassword) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Current password is required" });
 	}
 
 	if (!newPassword) {
@@ -141,7 +141,7 @@ const updateProfileInputValidator = async (req, res, next) => {
 	}
 
 	const isPasswordValid = validatePassword(newPassword);
-	if (isPasswordValid) {
+	if (!isPasswordValid) {
 		return res
 			.status(400)
 			.json({ success: false, error: "Password must to be strong" });
@@ -163,44 +163,48 @@ const registerUserInputValidator = async (req, res, next) => {
 		orders,
 	} = req.body;
 
-	if (!name) {
-		return res.status(400).json({ success: false, error: "Name is required" });
+	// Check required fields
+	if (!name) return res.status(400).json({ success: false, error: "Name is required" });
+	if (!email) return res.status(400).json({ success: false, error: "Email is required" });
+	if (!phone) return res.status(400).json({ success: false, error: "Phone number is required" });
+	if (!password) return res.status(400).json({ success: false, error: "Password is required" });
+	if (!confirmPassword) return res.status(400).json({ success: false, error: "Confirm password is required" });
+	if (!totalPrice) return res.status(400).json({ success: false, error: "Total price is required" });
+	if (!deliveryInfo.firstName) return res.status(400).json({ success: false, error: "First name is required" });
+	if (!deliveryInfo.lastName) return res.status(400).json({ success: false, error: "Last name is required" });
+	if (!deliveryInfo.phone) return res.status(400).json({ success: false, error: "Phone number is required" });
+	if (!deliveryInfo.subCity) return res.status(400).json({ success: false, error: "Sub city is required" });
+	if (!deliveryInfo.deliveryLocation) return res.status(400).json({ success: false, error: "Delivery location is required" });
+
+	// Define valid prices based on name and size
+	const validPrices = {
+		ministicker: { large: 60, medium: 50, small: 40 },
+		laptopskin: {
+			"half_package": 350,
+			"regular_full_package": 600,
+			"Special_Full_package": 800,
+			Premium: 1000
+		},
+	};
+
+	// Validate each sticker's price
+	for (const order of orders) {
+		for (const sticker of order.stickers) {
+			const { name, size, price } = sticker;
+			const validPrice = validPrices[name]?.[size];
+
+			if (!validPrice || validPrice !== price) {
+				return res.status(400).json({
+					success: false,
+					error: `Invalid price for ${name} (${size}). Expected: ${validPrice}, Received: ${price}`
+				});
+			}
+		}
 	}
 
-	if (!email) {
-		return res.status(400).json({ success: false, error: "Email is required" });
-	}
-
-	if (!phone) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Phone number is required" });
-	}
-
-	if (!password) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Password is required" });
-	}
-
-	if (!confirmPassword) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Confrim password is required" });
-	}
-
-	if (!totalPrice) {
-		return res
-			.status(400)
-			.json({ success: false, error: "Total price is required" });
-	}
-
-	if(!deliveryInfo.firstName){
-		return res
-			.status(400)
-			.json({ success: false, error: "F price is required" });
-	}
+	next();
 };
+
 
 // user login validator
 const loginUserInputValidator = async (req, res, next) => {
@@ -234,4 +238,5 @@ module.exports = {
 	updateProfileInputValidator,
 	loginUserInputValidator,
 	paymentInfoUserInputValidator,
+	registerUserInputValidator
 };

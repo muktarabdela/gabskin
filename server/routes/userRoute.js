@@ -11,11 +11,11 @@ const {
 } = require("../controllers/useController.js");
 
 //import input validator
-const { loginUserInputValidator } = require("../middleware/inputValidator.js");
+const { loginUserInputValidator, registerUserInputValidator } = require("../middleware/inputValidator.js");
 
 const authMiddleware = require("../middleware/authenticateToken.js");
 
-router.post("/register", registerUser);
+router.post("/register", registerUserInputValidator, registerUser);
 router.post("/login", loginUserInputValidator, loginUser);
 
 // get user info

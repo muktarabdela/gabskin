@@ -9,7 +9,7 @@ const {
 } = require("../controllers/adminController.js");
 const authMiddleware = require("../middleware/authenticateToken.js");
 const User = require("../models/userModel.js");
-//import rate limiter
+// import rate limiter
 const rateLimitter = require("../middleware/rateLimiter.js");
 
 //import input validator
@@ -23,8 +23,8 @@ const {
 
 // Admin login route
 router.post("/login",
-	// adminLoginInputValidator,  
-	// rateLimitter,
+	adminLoginInputValidator,  
+	rateLimitter,
 	adminLogin
 );
 

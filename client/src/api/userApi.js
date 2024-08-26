@@ -93,7 +93,7 @@ export const submitFeedback = async (data) => {
 export const getUserInfo = async (userIdFromToken) => {
     const token = getToken();
     try {
-        const response = await instance.get(`/users/get-user-info/${userIdFromToken}`, {
+        const response = await instance.get(`/users/get-user-info/`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

@@ -59,7 +59,7 @@ const RegisterForm = () => {
                     {
                         stickers: cartItems.map(item => ({
                             id: item.id,
-                            // price: item.price,
+                            price: item.price,
                             size: item.size,
                             name: item.name,
                             quantity: item.quantity,
