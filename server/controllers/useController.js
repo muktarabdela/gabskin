@@ -10,6 +10,7 @@ dotenv.config();
 const registerUser = async (req, res) => {
     try {
         const { name, email, phone, password, confirmPassword, totalPrice, deliveryInfo, orders } = req.body;
+        console.log(orders[0]);
         // Check if the email already exists
         const existingUserEmail = await User.findOne({ email }).lean();
         if (existingUserEmail) {
@@ -87,9 +88,6 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ message: "Please provide email and password, " });
-        }
         const user = await User.findOne({ email, role: 'user', isAdmin: false });
 
         if (!user) {
@@ -98,7 +96,7 @@ const loginUser = async (req, res) => {
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.status(401).json({ message: "Incorrect Password" });
         }
         const token = user.createJWT();
         res.status(200).json({ status: true, user: { id: user._id, email: user.email, isAdmin: user.isAdmin }, token });
@@ -138,10 +136,6 @@ const paymentInfo = async (req, res) => {
 const getUserInfo = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const userIdFromParams = req.params.userId;
-        if (userId !== userIdFromParams) {
-            return res.status(400).json({ message: 'Invalid user ID' });
-        }
         const userInfo = await User.findById(userId).populate('orders.stickers');
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: 'Invalid user ID' });

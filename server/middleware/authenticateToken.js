@@ -34,16 +34,12 @@ const verifyToken = async (req, res, next) => {
 
 // function to check if the user is admin
 const checkAdmin = async (req, res, next) => {
-    // const token = req.headers["authorization"]?.split(" ")[1];
-    // if (!token) {
-    //     return res.status(401).json({ message: 'No token provided' });
-    // }
     try {
         const email = req.user.email;
         const user = await Admin.findOne({ email: email, role: 'admin', isAdmin: true });
-        // if (!user) {
-        //     return res.status(401).json({ message: 'admin user not found' });
-        // }
+        if (!user) {
+            return res.status(401).json({ message: 'admin user not found' });
+        }
         if (user.role !== 'admin' || !user.isAdmin) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
