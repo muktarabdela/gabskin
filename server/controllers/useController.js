@@ -9,7 +9,10 @@ dotenv.config();
 // Handle user registration
 const registerUser = async (req, res) => {
     try {
-        const { name, email, phone, password, confirmPassword, totalPrice, deliveryInfo, orders } = req.body;
+        const { name, email, phone, password, confirmPassword, totalPrice, deliveryInfo, orders } = req.body
+        const stickerName = orders[0].stickers[0]
+        // 
+        console.log(stickerName)
         // Check if the email already exists
         const existingUserEmail = await User.findOne({ email }).lean();
         if (existingUserEmail) {
@@ -58,7 +61,7 @@ const registerUser = async (req, res) => {
         // generate hash
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        console.log('Hash:', hash);
+        // console.log('Hash:', hash);
 
         // Combine user registration data with additional details
         const newUser = new User({
@@ -73,7 +76,7 @@ const registerUser = async (req, res) => {
             orders,
             isNewUser: true,
         });
-        console.log('New user ID:', newUser._id);
+        // console.log('New user ID:', newUser._id);
         await newUser.save();
         const token = newUser.createJWT();
 

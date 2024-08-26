@@ -30,7 +30,7 @@ const RegisterForm = () => {
     const cartItems = useSelector(selectCartItems);
     const totalPrice = useSelector((state) => selectTotalPrice(state));
     const [passwordTouched, setPasswordTouched] = useState(false);
-
+    console.log(cartItems)
     // Use Redux state for error data
     const dispatch = useDispatch();
     const [nameError, setNameError] = useState(null);
@@ -59,11 +59,12 @@ const RegisterForm = () => {
                     {
                         stickers: cartItems.map(item => ({
                             id: item.id,
-                            price: item.price,
+                            // price: item.price,
                             size: item.size,
                             quantity: item.quantity,
                             category: item.category,
                             imageUrl: item.imageUrl,
+                            name: item.name
                         })),
                     },
                 ],

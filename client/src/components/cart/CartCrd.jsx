@@ -6,9 +6,10 @@ import { Link } from "react-router-dom";
 
 function Cart() {
   const cartStickers = useSelector((state) => state.cart.stickers);
+  console.log(cartStickers)
   const dispatch = useDispatch();
 
-  const updateCartCount = (newCount) => {};
+  const updateCartCount = (newCount) => { };
 
   const handleRemoveFromCart = (itemId) => {
     dispatch(removeFromCart(itemId));
