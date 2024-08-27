@@ -163,7 +163,7 @@ export const deleteUser = async (userId) => {
 export const updateDeliveryStatus = async (userId, deliveryStatus) => {
     const token = getToken();
     try {
-        const response = await instance.put(`/stickers/update-delivery-status/${userId}`, {
+        const response = await instance.put(`/admin/update-delivery-status/${userId}`, {
             newDeliveryStatus: deliveryStatus[userId],
         },
             {
@@ -193,7 +193,7 @@ export const updateDeliveryStatus = async (userId, deliveryStatus) => {
 export const updatePaymentStatus = async (userId, paymentStatus) => {
     const token = getToken();
     try {
-        const response = await instance.put(`/stickers/update-payment-status/${userId}`, {
+        const response = await instance.put(`/admin/update-payment-status/${userId}`, {
             newPaymentStatus: paymentStatus[userId],
         },
             {

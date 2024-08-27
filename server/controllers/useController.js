@@ -1,9 +1,7 @@
 const User = require('../models/userModel.js');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const asyncHandler = require('express-async-handler');
 dotenv.config();
 
 // Handle user registration

@@ -190,6 +190,7 @@ const registerUserInputValidator = async (req, res, next) => {
 	// Validate each sticker's price
 	for (const order of orders) {
 		for (const sticker of order.stickers) {
+			console.log(sticker);
 			const { name, size, price } = sticker;
 			const validPrice = validPrices[name]?.[size];
 

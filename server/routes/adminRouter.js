@@ -6,9 +6,10 @@ const {
 	updateProfile,
 	deleteUser,
 	getUsers,
+	updatePaymentStatus,
+	updateDeliveryStatus,
 } = require("../controllers/adminController.js");
 const authMiddleware = require("../middleware/authenticateToken.js");
-const User = require("../models/userModel.js");
 // import rate limiter
 const rateLimitter = require("../middleware/rateLimiter.js");
 
@@ -23,7 +24,7 @@ const {
 
 // Admin login route
 router.post("/login",
-	adminLoginInputValidator,  
+	adminLoginInputValidator,
 	rateLimitter,
 	adminLogin
 );
@@ -49,6 +50,9 @@ router.delete(
 	deleteUser
 );
 
+router.put('/update-payment-status/:userId', authMiddleware.verifyToken, authMiddleware.checkAdmin, updatePaymentStatus);
+router.put('/update-delivery-status/:userId', authMiddleware.verifyToken, authMiddleware.checkAdmin, updateDeliveryStatus);
 
 
-module.exports = router;
+
+module.exports = router

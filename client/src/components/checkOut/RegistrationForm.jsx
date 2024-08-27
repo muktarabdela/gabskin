@@ -61,7 +61,6 @@ const RegisterForm = () => {
                             id: item.id,
                             price: item.price,
                             size: item.size,
-                            name: item.name,
                             quantity: item.quantity,
                             category: item.category,
                             imageUrl: item.imageUrl,
